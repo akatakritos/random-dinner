@@ -10,12 +10,11 @@
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import React from 'react';
-import { SafeAreaView, StyleSheet, ScrollView, View, Text, StatusBar } from 'react-native';
-
-import { Header, LearnMoreLinks, DebugInstructions, ReloadInstructions } from 'react-native/Libraries/NewAppScreen';
-import { Colors } from './app/assets/colors';
+import React, { useEffect } from 'react';
+import { Provider, useDispatch } from 'react-redux';
 import { Layout } from './app/components/Layout';
+import { initializeList } from './app/data/restaurantsSlice';
+import { rootStore } from './app/data/rootStore';
 import { Home } from './app/Home';
 import { RouteParams } from './app/routes';
 
@@ -26,12 +25,26 @@ const Stack = createStackNavigator<RouteParams>();
 const App = () => {
   return (
     <NavigationContainer>
-      <Layout>
-        <Stack.Navigator initialRouteName="Home">
-          <Stack.Screen name="Home" component={Home} options={{ headerShown: false }} />
-        </Stack.Navigator>
-      </Layout>
+      <Provider store={rootStore}>
+        <Initializer />
+      </Provider>
     </NavigationContainer>
+  );
+};
+
+const Initializer = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(initializeList());
+  }, [dispatch]);
+
+  return (
+    <Layout>
+      <Stack.Navigator initialRouteName="Home">
+        <Stack.Screen name="Home" component={Home} options={{ headerShown: false }} />
+      </Stack.Navigator>
+    </Layout>
   );
 };
 
