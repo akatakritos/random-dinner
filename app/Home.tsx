@@ -1,12 +1,13 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Colors } from './assets/colors';
 import { GlobalStyles } from './assets/global-styles';
 import { Layout } from './components/Layout';
 import { RnButton, RnButtonBar } from './components/RnButton';
-import { selectRestaurants } from './data/restaurantsSlice';
+import { restaurantChosen, selectLastChosen, selectRestaurants } from './data/restaurantsSlice';
+import { Restaurant } from './models';
 
 const styles = StyleSheet.create({
   background: {
@@ -25,16 +26,29 @@ const styles = StyleSheet.create({
   },
 });
 
-function pickRandom<T>(items: T[]) {
+function pickRandom(items: Restaurant[], lastSelected?: string) {
   if (!items) return undefined;
-  return items[Math.floor(Math.random() * items.length)];
+  if (items.length === 1) return items[0];
+
+  let selected;
+  do {
+    selected = items[Math.floor(Math.random() * items.length)];
+  } while (selected.id === lastSelected);
+
+  return selected;
 }
 
 export const Home: FC<{}> = (props) => {
   const restaurants = useSelector(selectRestaurants);
-  const [chosen, setChosen] = useState(pickRandom(restaurants));
+  const dispatch = useDispatch();
+  const chosen = useSelector(selectLastChosen);
 
-  const pickAgain = () => setChosen(pickRandom(restaurants));
+  const pickAgain = () => {
+    const id = pickRandom(restaurants, chosen?.id)?.id;
+    if (id) dispatch(restaurantChosen({ id }));
+  };
+
+  useEffect(() => pickAgain(), []);
 
   return (
     <View style={[styles.background]}>

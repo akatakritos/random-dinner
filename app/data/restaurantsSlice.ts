@@ -4,17 +4,22 @@ import { RootState } from './rootStore';
 
 const RestaurantAdapter = createEntityAdapter<Restaurant>();
 const initialState = {
+  lastChosen: null as string | null,
   ...RestaurantAdapter.getInitialState(),
 };
 
 export const restaurantAdded = createAction<{ name: string }>('restaurants/added');
 export const restaurantRemoved = createAction<{ id: string }>('restaurants/removed');
 export const initializeList = createAction<undefined>('restaurants/initialize');
+export const restaurantChosen = createAction<{ id: string }>('restaurants/chosen');
 
 const selectSlice = (state: RootState) => state.restaurants;
 const selectors = RestaurantAdapter.getSelectors(selectSlice);
 
 export const selectRestaurants = selectors.selectAll;
+export const selectLastChosen = createSelector(selectSlice, (s) => {
+  return s.lastChosen ? s.entities[s.lastChosen] : null;
+});
 
 export const restaurantsSlice = createSlice({
   name: 'restaurants',
@@ -35,6 +40,10 @@ export const restaurantsSlice = createSlice({
         if (state.ids.length > 0) return state;
 
         return RestaurantAdapter.addMany(state, DefaultRestaurants);
+      })
+
+      .addCase(restaurantChosen, (state, { payload }) => {
+        state.lastChosen = payload.id;
       })
 
       .addDefaultCase((state) => state),
