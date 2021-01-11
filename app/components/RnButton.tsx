@@ -19,6 +19,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     padding: 8,
   },
+  primary: {},
+  secondary: {
+    backgroundColor: Colors.info,
+  },
 });
 
 export const RnButtonBar: FC<{}> = (props) => {
@@ -33,8 +37,16 @@ type RnButtonProps = {
 };
 
 export const RnButton: FC<RnButtonProps> = (props) => {
+  const type = props.type ?? 'primary';
+  const style = StyleSheet.compose(
+    {
+      ...styles.btn,
+      ...styles[type],
+    },
+    props.style
+  );
   return (
-    <TouchableOpacity style={styles.btn} onPress={props.onPress}>
+    <TouchableOpacity style={style} onPress={props.onPress}>
       <Text style={styles.text}>{props.text}</Text>
     </TouchableOpacity>
   );

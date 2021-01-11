@@ -8,6 +8,7 @@ import { Layout } from './components/Layout';
 import { RnButton, RnButtonBar } from './components/RnButton';
 import { restaurantChosen, selectLastChosen, selectRestaurants } from './data/restaurantsSlice';
 import { Restaurant } from './models';
+import { NavPropsFor } from './routes';
 
 const styles = StyleSheet.create({
   background: {
@@ -38,7 +39,8 @@ function pickRandom(items: Restaurant[], lastSelected?: string) {
   return selected;
 }
 
-export const Home: FC<{}> = (props) => {
+type HomeProps = {} & NavPropsFor<'Home'>;
+export const Home: FC<HomeProps> = (props) => {
   const restaurants = useSelector(selectRestaurants);
   const dispatch = useDispatch();
   const chosen = useSelector(selectLastChosen);
@@ -57,6 +59,9 @@ export const Home: FC<{}> = (props) => {
       </View>
       <RnButtonBar>
         <RnButton text="Don't want it, try another" onPress={pickAgain} />
+      </RnButtonBar>
+      <RnButtonBar>
+        <RnButton text="Admin" onPress={() => props.navigation.navigate('Admin')} type="secondary" />
       </RnButtonBar>
     </View>
   );
