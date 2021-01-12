@@ -1,10 +1,10 @@
 import React, { FC, useCallback, useLayoutEffect } from 'react';
 import { Button, FlatList, StyleSheet, Text, View } from 'react-native';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Colors } from './assets/colors';
 import { GlobalStyles } from './assets/global-styles';
 import { RnButton } from './components/RnButton';
-import { selectRestaurants } from './data/restaurantsSlice';
+import { restaurantRemoved, selectRestaurants } from './data/restaurantsSlice';
 import { Restaurant } from './models';
 import { NavPropsFor } from './routes';
 
@@ -17,6 +17,7 @@ const listStyles = StyleSheet.create({
 type AdminProps = {} & NavPropsFor<'Admin'>;
 export const Admin: FC<AdminProps> = (props) => {
   const restaurants = useSelector(selectRestaurants);
+  const dispatch = useDispatch();
 
   const handleAdd = useCallback(() => {}, []);
 
@@ -26,11 +27,13 @@ export const Admin: FC<AdminProps> = (props) => {
     });
   }, [props.navigation, handleAdd]);
 
+  const remove = (restaurant: Restaurant) => dispatch(restaurantRemoved({ id: restaurant.id }));
+
   return (
     <FlatList
       style={listStyles.list}
       data={restaurants}
-      renderItem={(item) => <RemovableRestaurant restaurant={item.item} />}
+      renderItem={(item) => <RemovableRestaurant restaurant={item.item} onRemove={remove} />}
     />
   );
 };
@@ -42,6 +45,7 @@ const rowStyles = StyleSheet.create({
     borderBottomWidth: StyleSheet.hairlineWidth,
     backgroundColor: Colors.background,
     alignItems: 'center',
+    padding: 4,
   },
   label: {
     flex: 1,
@@ -49,11 +53,11 @@ const rowStyles = StyleSheet.create({
     fontSize: 16,
   },
 });
-const RemovableRestaurant: FC<{ restaurant: Restaurant }> = (props) => {
+const RemovableRestaurant: FC<{ restaurant: Restaurant; onRemove: (restaurant: Restaurant) => void }> = (props) => {
   return (
     <View style={rowStyles.container}>
       <Text style={rowStyles.label}>{props.restaurant.name}</Text>
-      <RnButton text="remove" />
+      <RnButton text="remove" onPress={() => props.onRemove(props.restaurant)} />
     </View>
   );
 };
