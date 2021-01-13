@@ -1,5 +1,5 @@
 import React, { FC, useCallback, useLayoutEffect, useState } from 'react';
-import { Button, FlatList, Modal, StyleSheet, Text, View } from 'react-native';
+import { Animated, Button, FlatList, Modal, StyleSheet, Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { Colors } from './assets/colors';
 import { FormModal } from './components/FormModal';
@@ -8,6 +8,8 @@ import { restaurantAdded, restaurantRemoved, selectRestaurants } from './data/re
 import { Details, EmptyRestaurantData, RestaurantData } from './Details';
 import { Restaurant } from './models';
 import { NavPropsFor } from './routes';
+import Swipeable from 'react-native-gesture-handler/Swipeable';
+import { RectButton } from 'react-native-gesture-handler';
 
 const listStyles = StyleSheet.create({
   list: {
@@ -67,12 +69,29 @@ const rowStyles = StyleSheet.create({
     color: Colors.light,
     fontSize: 16,
   },
+  deleteButton: {
+    backgroundColor: Colors.danger,
+  },
+  deleteButtonText: {},
 });
 const RemovableRestaurant: FC<{ restaurant: Restaurant; onRemove: (restaurant: Restaurant) => void }> = (props) => {
+  const renderLeftActions = (progress: any, dragX: any) => {
+    const trans = dragX.interpolate({
+      inputRange: [0, 50, 100, 101],
+      outputRange: [-20, 0, 0, 1],
+    });
+    return (
+      <RectButton style={rowStyles.deleteButton} onPress={() => props.onRemove(props.restaurant)}>
+        <Animated.Text style={[rowStyles.deleteButtonText]}>(x)</Animated.Text>
+      </RectButton>
+    );
+  };
+
   return (
-    <View style={rowStyles.container}>
-      <Text style={rowStyles.label}>{props.restaurant.name}</Text>
-      <RnButton text="remove" onPress={() => props.onRemove(props.restaurant)} />
-    </View>
+    <Swipeable renderRightActions={renderLeftActions}>
+      <View style={rowStyles.container}>
+        <Text style={rowStyles.label}>{props.restaurant.name}</Text>
+      </View>
+    </Swipeable>
   );
 };
