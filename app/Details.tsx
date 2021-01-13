@@ -42,6 +42,7 @@ export const Details: FC<DetailsProps> = (props) => {
           label="Restaurant Name"
           value={props.model.name}
           onValueChange={(value) => setModel('name', value)}
+          autoFocus
         />
       </View>
 

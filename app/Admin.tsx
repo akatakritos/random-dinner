@@ -10,6 +10,7 @@ import { Restaurant } from './models';
 import { NavPropsFor } from './routes';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { RectButton } from 'react-native-gesture-handler';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
 const listStyles = StyleSheet.create({
   list: {
@@ -71,18 +72,17 @@ const rowStyles = StyleSheet.create({
   },
   deleteButton: {
     backgroundColor: Colors.danger,
+    padding: 8,
   },
-  deleteButtonText: {},
+  deleteButtonText: {
+    color: Colors.light,
+  },
 });
 const RemovableRestaurant: FC<{ restaurant: Restaurant; onRemove: (restaurant: Restaurant) => void }> = (props) => {
-  const renderLeftActions = (progress: any, dragX: any) => {
-    const trans = dragX.interpolate({
-      inputRange: [0, 50, 100, 101],
-      outputRange: [-20, 0, 0, 1],
-    });
+  const renderLeftActions = () => {
     return (
       <RectButton style={rowStyles.deleteButton} onPress={() => props.onRemove(props.restaurant)}>
-        <Animated.Text style={[rowStyles.deleteButtonText]}>(x)</Animated.Text>
+        <FontAwesome5 style={rowStyles.deleteButtonText} name="trash" />
       </RectButton>
     );
   };

@@ -20,12 +20,18 @@ type FormFieldProps = {
   label: string;
   value: string;
   onValueChange: (value: string) => void;
+  autoFocus?: boolean;
 };
 export const FormField: FC<FormFieldProps> = (props) => {
   return (
     <View>
       <Text style={styles.label}>{props.label}</Text>
-      <TextInput style={styles.input} onChangeText={props.onValueChange} value={props.value} />
+      <TextInput
+        style={styles.input}
+        onChangeText={props.onValueChange}
+        value={props.value}
+        autoFocus={props.autoFocus}
+      />
     </View>
   );
 };
