@@ -51,7 +51,7 @@ export const Home: FC<HomeProps> = (props) => {
     if (id) dispatch(restaurantChosen({ id }));
   };
 
-  useEffect(() => pickAgain(), []);
+  useEffect(pickAgain, [restaurants]);
 
   return (
     <View style={[styles.background]}>

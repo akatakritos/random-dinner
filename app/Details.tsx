@@ -1,4 +1,3 @@
-import { forScaleFromCenterAndroid } from '@react-navigation/stack/lib/typescript/src/TransitionConfigs/CardStyleInterpolators';
 import React, { FC, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Colors } from './assets/colors';
