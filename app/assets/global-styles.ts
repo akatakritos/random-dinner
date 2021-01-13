@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { Colors } from 'react-native/Libraries/NewAppScreen';
+import { Colors } from './colors';
 
 export const GlobalStyles = StyleSheet.create({
   background: {
@@ -9,5 +9,11 @@ export const GlobalStyles = StyleSheet.create({
   debug: {
     borderColor: 'red',
     borderWidth: 1,
+  },
+  heading: {
+    fontSize: 18,
+    color: Colors.light,
+    textAlign: 'center',
+    marginBottom: 8,
   },
 });

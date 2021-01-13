@@ -1,10 +1,11 @@
-import React, { FC, useCallback, useLayoutEffect } from 'react';
-import { Button, FlatList, StyleSheet, Text, View } from 'react-native';
+import React, { FC, useCallback, useLayoutEffect, useState } from 'react';
+import { Button, FlatList, Modal, StyleSheet, Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { Colors } from './assets/colors';
-import { GlobalStyles } from './assets/global-styles';
+import { FormModal } from './components/FormModal';
 import { RnButton } from './components/RnButton';
 import { restaurantRemoved, selectRestaurants } from './data/restaurantsSlice';
+import { Details, RestaurantData } from './Details';
 import { Restaurant } from './models';
 import { NavPropsFor } from './routes';
 
@@ -18,8 +19,12 @@ type AdminProps = {} & NavPropsFor<'Admin'>;
 export const Admin: FC<AdminProps> = (props) => {
   const restaurants = useSelector(selectRestaurants);
   const dispatch = useDispatch();
+  const [detailsOpen, setDetailsOpen] = useState(false);
+  const [model, setModel] = useState<RestaurantData>({ name: '' });
 
-  const handleAdd = useCallback(() => {}, []);
+  const handleAdd = useCallback(() => {
+    setDetailsOpen(true);
+  }, []);
 
   useLayoutEffect(() => {
     props.navigation.setOptions({
@@ -28,13 +33,22 @@ export const Admin: FC<AdminProps> = (props) => {
   }, [props.navigation, handleAdd]);
 
   const remove = (restaurant: Restaurant) => dispatch(restaurantRemoved({ id: restaurant.id }));
+  const handleSave = () => {
+    console.log(model);
+    setDetailsOpen(false);
+  };
 
   return (
-    <FlatList
-      style={listStyles.list}
-      data={restaurants}
-      renderItem={(item) => <RemovableRestaurant restaurant={item.item} onRemove={remove} />}
-    />
+    <>
+      <FlatList
+        style={listStyles.list}
+        data={restaurants}
+        renderItem={(item) => <RemovableRestaurant restaurant={item.item} onRemove={remove} />}
+      />
+      <FormModal visible={detailsOpen} onHardwareClose={() => setDetailsOpen(false)}>
+        <Details model={model} onModelChange={setModel} onCancel={() => setDetailsOpen(false)} onSave={handleSave} />
+      </FormModal>
+    </>
   );
 };
 
