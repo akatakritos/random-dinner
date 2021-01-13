@@ -14,9 +14,11 @@ const styles = StyleSheet.create({
   },
 });
 
-export type RestaurantData = {
-  name: string;
+export const EmptyRestaurantData = {
+  name: '',
 };
+
+export type RestaurantData = typeof EmptyRestaurantData;
 
 type DetailsProps = {
   model: RestaurantData;

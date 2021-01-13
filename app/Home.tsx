@@ -29,6 +29,7 @@ const styles = StyleSheet.create({
 
 function pickRandom(items: Restaurant[], lastSelected?: string) {
   if (!items) return undefined;
+  if (items.length === 0) return undefined;
   if (items.length === 1) return items[0];
 
   let selected;

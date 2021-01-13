@@ -4,8 +4,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Colors } from './assets/colors';
 import { FormModal } from './components/FormModal';
 import { RnButton } from './components/RnButton';
-import { restaurantRemoved, selectRestaurants } from './data/restaurantsSlice';
-import { Details, RestaurantData } from './Details';
+import { restaurantAdded, restaurantRemoved, selectRestaurants } from './data/restaurantsSlice';
+import { Details, EmptyRestaurantData, RestaurantData } from './Details';
 import { Restaurant } from './models';
 import { NavPropsFor } from './routes';
 
@@ -20,7 +20,7 @@ export const Admin: FC<AdminProps> = (props) => {
   const restaurants = useSelector(selectRestaurants);
   const dispatch = useDispatch();
   const [detailsOpen, setDetailsOpen] = useState(false);
-  const [model, setModel] = useState<RestaurantData>({ name: '' });
+  const [model, setModel] = useState(EmptyRestaurantData);
 
   const handleAdd = useCallback(() => {
     setDetailsOpen(true);
@@ -34,8 +34,9 @@ export const Admin: FC<AdminProps> = (props) => {
 
   const remove = (restaurant: Restaurant) => dispatch(restaurantRemoved({ id: restaurant.id }));
   const handleSave = () => {
-    console.log(model);
+    dispatch(restaurantAdded(model));
     setDetailsOpen(false);
+    setModel(EmptyRestaurantData);
   };
 
   return (
